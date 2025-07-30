@@ -1,32 +1,32 @@
-# 🧪 E2E Manual API Testing for E-commerce Project
+#  E2E Manual API Testing for E-commerce Project
 
 This repository contains end-to-end manual API test cases for an e-commerce system. It includes authentication, product, and order management flows using **Postman** and is executed using **Newman** with detailed HTML reporting.
 
 ---
 
-## ✅ Test Scenarios Covered
+##  Test Scenarios Covered
 
-- 🔐 **User Login**
+-  **User Login**
 
   - Extracts `token` and `userId` from response.
 
-- 📦 **Add Product**
+-  **Add Product**
 
   - Add new product with multiple attributes to the website.
 
-- 🧾 **Create Order**
+-  **Create Order**
 
   - Places order using product and user information.
 
-- 📃 **Get Order Details**
+-  **Get Order Details**
 
   - Retrieves details of the created order.
 
-- ❌ **Delete Order**
+-  **Delete Order**
 
   - Deletes the created order by ID.
 
-- 🗑 **Delete Product**
+-  **Delete Product**
   - Removes the previously added product.
 
 # 🛠 Setup Instructions
@@ -42,7 +42,7 @@ npm install -g newman
 npm install -g newman-reporter-html
 ```
 
-# 🛠 Running the Tests
+## 🛠 Running the Tests
 
 ```bash
 newman run Ecom.postman_collection.json \
