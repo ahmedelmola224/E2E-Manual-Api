@@ -1,0 +1,434 @@
+{
+	"info": {
+		"_postman_id": "84adad1c-a0a4-4af1-8728-c2b2f9022607",
+		"name": "Ecom",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40619422"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData=pm.response.json();",
+							"pm.collectionVariables.set(\"token\",jsonData.token);",
+							"pm.collectionVariables.set(\"userId\", jsonData.userId);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.message).to.eql(\"Login Successfully\");",
+							"    pm.expect(jsonData).to.have.property(\"token\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userEmail\": \"ahmedelmola224@gmail.com\",\n    \"userPassword\": \"123456@Ahmed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/ecom/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"productId\",jsonData.productId);",
+							"pm.test(\"Product Added Successfully\",function(){",
+							"    pm.response.to.have.status(201);",
+							"    pm.expect(jsonData.message).to.eql(\"Product Added Successfully\");",
+							"        pm.expect(jsonData).to.have.property(\"productId\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"productName\",pm.iterationData.get(\"productName\"));",
+							"pm.collectionVariables.set(\"productCategory\",pm.iterationData.get(\"productCategory\"));",
+							"pm.collectionVariables.set(\"productDescription\",pm.iterationData.get(\"productDescription\"));",
+							"pm.collectionVariables.set(\"productFor\",pm.iterationData.get(\"productFor\"));",
+							"pm.collectionVariables.set(\"productPrice\",pm.iterationData.get(\"productPrice\"));",
+							"pm.collectionVariables.set(\"productSubCategory\",pm.iterationData.get(\"productSubCategory\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "{{productName}}",
+							"type": "text"
+						},
+						{
+							"key": "productAddedBy",
+							"value": "{{userId}}",
+							"type": "text"
+						},
+						{
+							"key": "productCategory",
+							"value": "{{productCategory}}",
+							"type": "text"
+						},
+						{
+							"key": "productSubCategory",
+							"value": "{{productSubCategory}}",
+							"type": "text"
+						},
+						{
+							"key": "productPrice",
+							"value": "{{productPrice}}",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "{{productDescription}}",
+							"type": "text"
+						},
+						{
+							"key": "productFor",
+							"value": "{{productFor}}",
+							"type": "text"
+						},
+						{
+							"key": "productImage",
+							"type": "file",
+							"src": "shirt.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/ecom/product/add-product",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"product",
+						"add-product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData = pm.response.json();",
+							"pm.environment.set(\"order_id\", jsonData.orders[0]);",
+							"",
+							"pm.test(\"Order Added Successfully\",function(){",
+							"    pm.response.to.have.status(201);",
+							"    pm.expect(jsonData.message).to.eql(\"Order Placed Successfully\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orders\": [\n        {\n            \"country\": \"Egypt\",\n            \"productOrderedId\": \"{{productId}}\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/ecom/order/create-order",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"create-order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Validate order Details\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.data.orderById).to.eql(pm.collectionVariables.get(\"userId\"));",
+							"    pm.expect(jsonData.message).to.be.eql(\"Orders fetched for customer Successfully\");",
+							"    pm.expect(jsonData.data.productName).to.be.eql(pm.collectionVariables.get(\"productName\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/ecom/order/get-orders-details?id={{order_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"get-orders-details"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{order_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Validate Product Deleted Successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.message).to.eql(\"Product Deleted Successfully\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/ecom/product/delete-product/{{productId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"product",
+						"delete-product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Validate Order Deleted Successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.message).to.eql(\"Orders Deleted Successfully\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/ecom/order/delete-order/{{order_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"delete-order",
+						"{{order_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "url",
+			"value": "https://rahulshettyacademy.com",
+			"type": "string"
+		},
+		{
+			"key": "productName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productCategory",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productSubCategory",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productPrice",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productDescription",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productFor",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
